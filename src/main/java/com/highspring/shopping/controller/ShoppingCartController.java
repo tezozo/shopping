@@ -29,6 +29,11 @@ public class ShoppingCartController {
         return ResponseEntity.ok(service.getByOwner(owner));
     }
 
+    @GetMapping("/owners")
+    public ResponseEntity<List<String>> getOwners() {
+        return ResponseEntity.ok(service.getDistinctOwners());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ShoppingCart> getById(@PathVariable UUID id) {
         return service.getById(id)

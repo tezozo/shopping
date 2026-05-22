@@ -14,6 +14,7 @@ export default function CartDetail() {
   const [categoryDiscounts, setCategoryDiscounts] = useState([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState(null)
 
   useEffect(() => {
     Promise.all([getCart(id), getItems(), getCategoryDiscounts()])
@@ -42,6 +43,7 @@ export default function CartDetail() {
 
   const handleSave = async () => {
     setSaving(true)
+    setSaveError(null)
     try {
       await updateCart(id, {
         name: cart.name,
@@ -49,8 +51,7 @@ export default function CartDetail() {
         items: cartItems.map(ci => ({ itemId: ci.item.id, units: ci.units }))
       })
     } catch (err) {
-      console.error('Save failed', err)
-      alert('Failed to save cart')
+      setSaveError(err.response?.data?.error ?? 'Failed to save cart')
     } finally {
       setSaving(false)
     }
@@ -116,8 +117,16 @@ export default function CartDetail() {
 
   return (
     <div className="cart-detail">
-      <button className="secondary" onClick={() => navigate('/')}>← Back</button>
+      <div className="cart-header">
+        <div className="cart-header-left">
+          <button className="secondary" onClick={() => navigate('/')}>Cancel</button>
+        </div>
+        <button onClick={handleSave} disabled={saving}>
+          {saving ? 'Saving…' : 'Save Cart'}
+        </button>
+      </div>
       <h2>{cart.name}</h2>
+      {saveError && <div className="save-error">{saveError}</div>}
 
       <section>
         <h3>Items in Cart</h3>
@@ -131,10 +140,9 @@ export default function CartDetail() {
                   <th>Item</th>
                   <th>Unit Price</th>
                   <th>Discount</th>
-                  <th>Net</th>
-                  <th>Taxes</th>
+                  <th>Applicable Taxes</th>
                   <th>Units</th>
-                  <th>Line Total</th>
+                  <th>Net</th>
                   <th></th>
                 </tr>
               </thead>
@@ -151,10 +159,8 @@ export default function CartDetail() {
                         </>
                       ) : '—'}
                     </td>
-                    <td>${net.toFixed(2)}</td>
                     <td className="taxes-cell">
-                      {(ci.item.taxes ?? []).filter(t => parseFloat(t.percent) > 0)
-                        .map(t => `${t.name} ${parseFloat(t.percent)}%`).join(', ') || '—'}
+                      {(ci.item.taxes ?? []).map(t => `${t.name} ${parseFloat(t.percent)}%`).join(', ') || '—'}
                     </td>
                     <td>
                       <input
@@ -164,7 +170,7 @@ export default function CartDetail() {
                         onChange={(e) => setUnits(ci.item.id, parseInt(e.target.value) || 0)}
                       />
                     </td>
-                    <td>${total.toFixed(2)}</td>
+                    <td>${net.toFixed(2)}</td>
                     <td>
                       <button className="danger" onClick={() => setUnits(ci.item.id, 0)}>Remove</button>
                     </td>
@@ -173,19 +179,19 @@ export default function CartDetail() {
               </tbody>
               <tfoot>
                 <tr>
-                  <td colSpan="6">Subtotal (after discounts, before tax)</td>
+                  <td colSpan="5">Subtotal (after discounts, before tax)</td>
                   <td>${subtotal.toFixed(2)}</td>
                   <td></td>
                 </tr>
                 {Object.values(taxTotals).map(({ tax, amount }) => (
                   <tr key={tax.id}>
-                    <td colSpan="6">{tax.name} ({parseFloat(tax.percent)}%)</td>
+                    <td colSpan="5">{tax.name} ({parseFloat(tax.percent)}%)</td>
                     <td>${amount.toFixed(2)}</td>
                     <td></td>
                   </tr>
                 ))}
                 <tr className="grand-total-row">
-                  <td colSpan="6"><strong>Grand Total</strong></td>
+                  <td colSpan="5"><strong>Grand Total</strong></td>
                   <td><strong>${grandTotal.toFixed(2)}</strong></td>
                   <td></td>
                 </tr>
@@ -231,12 +237,6 @@ export default function CartDetail() {
         )}
       </section>
 
-      <div className="detail-actions">
-        <button onClick={handleSave} disabled={saving}>
-          {saving ? 'Saving…' : 'Save Cart'}
-        </button>
-        <button className="secondary" onClick={() => navigate('/')}>Cancel</button>
-      </div>
     </div>
   )
 }

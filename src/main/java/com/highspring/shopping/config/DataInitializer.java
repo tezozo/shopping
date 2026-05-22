@@ -5,6 +5,7 @@ import com.highspring.shopping.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -22,9 +23,22 @@ public class DataInitializer implements CommandLineRunner {
     private final ItemRepository itemRepository;
     private final DiscountRepository discountRepository;
     private final CategoryDiscountRepository categoryDiscountRepository;
+    private final ShoppingCartRepository shoppingCartRepository;
 
     @Override
+    @Transactional
     public void run(String... args) {
+        boolean requested = java.util.Arrays.asList(args).contains("--runDataInitializer");
+        if (!requested) return;
+
+        // clear existing data in dependency order
+        shoppingCartRepository.deleteAll();
+        categoryDiscountRepository.deleteAll();
+        itemRepository.deleteAll();
+        taxRepository.deleteAll();
+        discountRepository.deleteAll();
+        categoryRepository.deleteAll();
+
         // discounts
         Discount tenOffMay = new Discount();
         tenOffMay.setName("10% off May");

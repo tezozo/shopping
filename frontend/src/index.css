@@ -131,7 +131,8 @@ input[type="number"] { width: 65px; }
 .item-card .item-price { color: #4f46e5; font-size: 0.85rem; }
 .item-card .item-meta { font-size: 0.75rem; color: #6b7280; }
 
-.detail-actions { display: flex; gap: 0.75rem; padding-top: 0.5rem; }
+.cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+.cart-header-left { display: flex; gap: 0.5rem; }
 
 .discount-cell { color: #16a34a; font-weight: 500; }
 .discount-names { font-size: 0.72rem; color: #6b7280; white-space: normal; margin-bottom: 0.2rem; }
@@ -140,6 +141,16 @@ input[type="number"] { width: 65px; }
 .item-discount-label { font-size: 0.7rem; color: #16a34a; line-height: 1.2; }
 
 .grand-total-row td { border-top: 2px solid #6b7280; padding-top: 0.75rem; }
+
+.save-error {
+  margin-bottom: 1rem;
+  padding: 0.65rem 1rem;
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 6px;
+  color: #dc2626;
+  font-size: 0.9rem;
+}
 
 .savings-banner {
   margin-top: 1rem;
