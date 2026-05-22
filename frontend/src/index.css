@@ -76,6 +76,44 @@ input:focus { border-color: #4f46e5; }
 .owner-input form { display: flex; gap: 0.5rem; }
 .owner-input input { width: 220px; }
 
+.combobox {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.combobox input { width: 220px; padding-right: 2rem; }
+.combobox-arrow {
+  position: absolute;
+  right: 0;
+  padding: 0 0.5rem;
+  background: none;
+  color: #6b7280;
+  font-size: 0.85rem;
+  height: 100%;
+  border-radius: 0 5px 5px 0;
+}
+.combobox-arrow:hover { background: #e5e7eb; color: #374151; }
+.combobox-list {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  list-style: none;
+  z-index: 100;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.combobox-list li {
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.combobox-list li:hover { background: #f3f4f6; }
+
 /* cart list */
 .cart-list h2 { margin-bottom: 1.25rem; font-size: 1.3rem; }
 
