@@ -56,7 +56,7 @@ public class DataInitializer implements CommandLineRunner {
 
         Discount nineteenOffElectronics = new Discount();
         nineteenOffElectronics.setName("19% off Electronics");
-        nineteenOffElectronics.setPercent(new BigDecimal("5.00"));
+        nineteenOffElectronics.setPercent(new BigDecimal("19.00"));
         nineteenOffElectronics.setStart(ZonedDateTime.of(
                 LocalDate.of(2026, 1, 1),
                 LocalTime.MIDNIGHT,
@@ -110,6 +110,11 @@ public class DataInitializer implements CommandLineRunner {
         categoryDiscount = new CategoryDiscount();
         categoryDiscount.setCategory(kitchen);
         categoryDiscount.setDiscount(fiveOffPreSummer);
+        categoryDiscountRepository.save(categoryDiscount);
+
+        categoryDiscount = new CategoryDiscount();
+        categoryDiscount.setCategory(kitchen);
+        categoryDiscount.setDiscount(tenOffMay);
         categoryDiscountRepository.save(categoryDiscount);
 
         // taxes
