@@ -31,9 +31,43 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.seleniumhq.selenium:selenium-java:4.21.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+def frontendDir = "$projectDir/frontend"
+
+tasks.register('npmInstall', Exec) {
+    workingDir frontendDir
+    commandLine 'cmd', '/c', 'npm install'
+    inputs.file("$frontendDir/package.json")
+    outputs.dir("$frontendDir/node_modules")
+}
+
+tasks.register('npmBuildForTest', Exec) {
+    dependsOn 'npmInstall'
+    workingDir frontendDir
+    commandLine 'cmd', '/c', 'npm run build'
+    inputs.dir("$frontendDir/src")
+    outputs.dir("$frontendDir/dist")
+}
+
+tasks.register('copyFrontendForTest', Copy) {
+    dependsOn 'npmBuildForTest'
+    from "$frontendDir/dist"
+    into layout.buildDirectory.dir("frontend-static/static")
+}
+
 tasks.named('test') {
-    useJUnitPlatform()
+    useJUnitPlatform {
+        excludeTags 'selenium'
+    }
+}
+
+tasks.register('seleniumTest', Test) {
+    dependsOn 'copyFrontendForTest', 'testClasses'
+    useJUnitPlatform {
+        includeTags 'selenium'
+    }
+    classpath += files(layout.buildDirectory.dir("frontend-static"))
 }
