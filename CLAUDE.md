@@ -19,7 +19,7 @@ npm run dev    # Vite dev server on :5173 (proxies /api → :8080)
 npm run build  # production build
 ```
 
-H2 console available at http://localhost:8080/h2-console (JDBC URL: `jdbc:h2:mem:shoppingdb`, user: `sa`, no password).
+H2 console available at http://localhost:8080/h2-console (JDBC URL: `jdbc:h2:file:./data/shoppingdb`, user: `sa`, no password).
 
 ## Architecture
 

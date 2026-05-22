@@ -17,5 +17,6 @@ public class Tax {
     private Long id;
 
     private String name;
+    @Column(precision = 8, scale = 4)
     private BigDecimal percent;
 }
